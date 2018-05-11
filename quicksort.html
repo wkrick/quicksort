@@ -4,8 +4,16 @@
 		<script src="quicksort.js"></script>
 	</head>
 	<body>
-		<p><button onclick="createArray(1000)">createArray</button></p>
-		<p><button onclick="sortArray()">sortArray</button></p>
+		<p>
+			<button onclick="createRandomArray(1000)">New Random Array</button>
+			<button onclick="createRandomUniqueArray(1000)">New Random Array (no duplicates)</button>
+			<button onclick="createSortedArrayAsc(1000)">New Sorted Array (ascending)</button>
+			<button onclick="createSortedArrayDesc(1000)">New Sorted Array (descending)</button>
+			<button onclick="createEqualArray(1000)">New Equal Array (zeroes)</button>
+			<br><br>
+			<button onclick="sortArray()">Quicksort</button>
+		</p>
 		<div id="array"></div>
+		<p id="swapcount"></p>
 	</body>
 </html>
