@@ -6,13 +6,15 @@
 	</head>
 	<body>
 		<p>
-			<button onclick="Quicksort.createRandomArray(1000)">New Random Array</button>
-			<button onclick="Quicksort.createRandomUniqueArray(1000)">New Random Array (no duplicates)</button>
-			<button onclick="Quicksort.createSortedArrayAsc(1000)">New Sorted Array (ascending)</button>
-			<button onclick="Quicksort.createSortedArrayDesc(1000)">New Sorted Array (descending)</button>
-			<button onclick="Quicksort.createEqualArray(1000)">New Equal Array (zeroes)</button>
+			Elements: <input id="num" type="number" name="quantity" min="1" max="1000" value="1000">
+			<button onclick="Quicksort.createRandomArray(document.getElementById('num').value)">New Random Array</button>
+			<button onclick="Quicksort.createRandomUniqueArray(document.getElementById('num').value)">New Random Array (no duplicates)</button>
+			<button onclick="Quicksort.createSortedArrayAsc(document.getElementById('num').value)">New Sorted Array (ascending)</button>
+			<button onclick="Quicksort.createSortedArrayDesc(document.getElementById('num').value)">New Sorted Array (descending)</button>
+			<button onclick="Quicksort.createEqualArray(document.getElementById('num').value)">New Equal Array (zeroes)</button>
 			<br><br>
-			<button onclick="Quicksort.sortArray()">Quicksort</button>
+			<button onclick="Quicksort.sortArray(document.getElementById('delay').value)">Quicksort</button>
+			Delay: <input id="delay" type="number" name="quantity" min="1" max="10" value="1">
 		</p>
 		<div id="array"></div>
 		<p id="swapcount"></p>

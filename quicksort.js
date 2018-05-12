@@ -1,10 +1,8 @@
 var Quicksort = (function () {
 
-	var numberArray = [],
-		outputArray = [],
-		swapcount = 0;
-
-	// private methods
+	var _numberArray = [],
+		_outputArray = [],
+		_swapcount = 0;
 
 	// Quiksort algorithm using the Hoare partition scheme
 	// Reference: https://en.wikipedia.org/wiki/Quicksort#Hoare_partition_scheme
@@ -41,31 +39,31 @@ var Quicksort = (function () {
 	
 	var _swap = function (arr, i, j) {
 		var temp;
-		swapcount++;
+		_swapcount++;
 		temp = arr[i];
 		arr[i] = arr[j];
 		arr[j] = temp;
-		outputArray.push(_getArrayAsString(j,i)); // store the array state after each swap
+		_outputArray.push(_getArrayAsString(j, i)); // store the array state after each swap
 	}
 
-	var _displayOutput = function (i) {
+	var _displayOutput = function (i, delay) {
 		setTimeout(function () {
-			var str = outputArray[i];
+			var str = _outputArray[i];
 			document.getElementById('array').innerHTML = str;
-		}, 2 * i);
+		}, delay * i);
 	}
 	
-	var _getArrayAsString = function (swap1,swap2) {
+	var _getArrayAsString = function (swap1, swap2) {
 		var i, str = "", separator = ""; // separator is initially blank
 		
-		for (i=0; i<numberArray.length; i++) {
+		for (i=0; i<_numberArray.length; i++) {
 			str += separator;
 			if (i === swap1 || i === swap2) {
 				str += "<span style=\"background-color: #FF0000\">";
-				str += numberArray[i];
+				str += _numberArray[i];
 				str += "</span>"
 			} else {
-				str += numberArray[i];	
+				str += _numberArray[i];	
 			}
 			separator = ", "; // change separator to a comma+space after first iteration
 		}
@@ -81,14 +79,16 @@ var Quicksort = (function () {
 		document.getElementById('swapcount').innerHTML = "";
 	}
 	
+	//
 	// public methods
+	//
 
 	var createRandomArray = function (size) {
 		var i;
-		numberArray = []; // clear the array
+		_numberArray = []; // clear the array
 		// fill it with random values
 		for (i=0; i<size; i++) {
-			numberArray[i] = Math.floor(Math.random() * size);
+			_numberArray[i] = Math.floor(Math.random() * size);
 		}
 
 		_showArray();
@@ -96,7 +96,7 @@ var Quicksort = (function () {
 
 	var createRandomUniqueArray = function (size) {
 		var i, n, count = 0, sequentialArray = [];
-		numberArray = []; // clear the array
+		_numberArray = []; // clear the array
 	
 		// generate an array of sequential values to pull from
 		for (i=0; i<size; i++) {
@@ -106,7 +106,7 @@ var Quicksort = (function () {
 		while (count < size) {
 			n = Math.floor(Math.random() * size);
 			if (sequentialArray[n] !== undefined) {
-				numberArray[count] = sequentialArray[n];
+				_numberArray[count] = sequentialArray[n];
 				sequentialArray[n] = undefined;
 				count++;
 			}
@@ -117,10 +117,10 @@ var Quicksort = (function () {
 	
 	var createSortedArrayAsc = function (size) {
 		var i;
-		numberArray = []; // clear the array
+		_numberArray = []; // clear the array
 		// fill it with sequential values
 		for (i=0; i<size; i++) {
-			numberArray[i] = i;
+			_numberArray[i] = i;
 		}
 		
 		_showArray();
@@ -128,10 +128,10 @@ var Quicksort = (function () {
 	
 	var createSortedArrayDesc = function (size) {
 		var i;
-		numberArray = []; // clear the array
+		_numberArray = []; // clear the array
 		// fill it with random values
 		for (i=0; i<size; i++) {
-			numberArray[i] = size-1-i;
+			_numberArray[i] = size-1-i;
 		}
 		
 		_showArray();
@@ -139,35 +139,36 @@ var Quicksort = (function () {
 	
 	var createEqualArray = function (size) {
 		var i;
-		numberArray = []; // clear the array
+		_numberArray = []; // clear the array
 		// fill it with random values
 		for (i=0; i<size; i++) {
-			numberArray[i] = 0;
+			_numberArray[i] = 0;
 		}
 		
 		_showArray();
 	}
 	
-	var sortArray = function () {
+	var sortArray = function (delay) {
 		var i;
-		outputArray = []; // clear the output array
-		swapcount = 0; // reset the swap count
+		_outputArray = []; // clear the output array
+		_swapcount = 0; // reset the swap count
 		
 		// clear the count
 		document.getElementById('swapcount').innerHTML = "";
 		
 		// sort the array
-		_quicksort(numberArray, 0, numberArray.length-1);
+		_quicksort(_numberArray, 0, _numberArray.length-1);
+
+		// store the final array state
+		_outputArray.push(_getArrayAsString(undefined, undefined));
+
+		// display the total swap count
+		document.getElementById('swapcount').innerHTML += ("Number of swaps: " + _swapcount + "<br>");
 		
-		outputArray.push(_getArrayAsString(undefined, undefined)); // store the final sorted array state
-		
-		// play back the output	
-		for (i = 0; i < outputArray.length; i++) {
-			_displayOutput(i);
+		// play back the output
+		for (i = 0; i < _outputArray.length; i++) {
+			_displayOutput(i, delay);
 		}
-	
-		// display the swap count
-		document.getElementById('swapcount').innerHTML += ("Number of swaps: " + swapcount + "<br>");
 	}
 	
 	return {
@@ -179,4 +180,4 @@ var Quicksort = (function () {
 		sortArray: sortArray
 	};
   
-  })();
+})();
