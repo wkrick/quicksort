@@ -18,7 +18,8 @@ var Quicksort = (function () {
 	var _partition = function (arr, lo, hi) {
 		var pivot = arr[lo],
 			i = lo - 1,
-			j = hi + 1;
+			j = hi + 1,
+			temp;
 	
 		while (true) {
 			do {
@@ -33,17 +34,13 @@ var Quicksort = (function () {
 				return j;
 			}
 			
-			_swap(arr, i, j);
+			// swap the elements
+			temp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = temp;
+			_swapcount++;		
+			_outputArray.push(_getArrayAsString(j, i)); // store the array state as a string after each swap
 		}
-	}
-	
-	var _swap = function (arr, i, j) {
-		var temp;
-		_swapcount++;
-		temp = arr[i];
-		arr[i] = arr[j];
-		arr[j] = temp;
-		_outputArray.push(_getArrayAsString(j, i)); // store the array state after each swap
 	}
 
 	var _displayOutput = function (i, delay) {
@@ -59,6 +56,7 @@ var Quicksort = (function () {
 		for (i=0; i<_numberArray.length; i++) {
 			str += separator;
 			if (i === swap1 || i === swap2) {
+				// highlight the elements that are being swapped
 				str += "<span style=\"background-color: #FF0000\">";
 				str += _numberArray[i];
 				str += "</span>"
