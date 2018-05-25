@@ -1,8 +1,7 @@
 var Quicksort = (function () {
 
 	var _numberArray = [],
-		_outputArray = [],
-		_swapcount = 0;
+		_outputArray = [];
 
 	// Quiksort algorithm using the Hoare partition scheme
 	// Reference: https://en.wikipedia.org/wiki/Quicksort#Hoare_partition_scheme
@@ -38,152 +37,132 @@ var Quicksort = (function () {
 			temp = arr[i];
 			arr[i] = arr[j];
 			arr[j] = temp;
-			_swapcount++;
-			_outputArray.push(_getArrayAsString(j, i)); // store the array state as a string after each swap
+
+			// store the pair of item indexes that were swapped after each swap
+			_outputArray.push([j, i]);
 		}
 	}
 
-	var _playBackOutput = function () {
-		var i, delay = 1;
-		// for smaller arrays, add a delay factor to slow down the output
-		if (_outputArray.length > 0 && _outputArray.length <= 1000) {
-			delay = Math.floor(1000/_outputArray.length);
-		}
-
+	var _playBackOutput = function (listId, countId, outputDelay) {
+		var i;
 		for (i = 0; i < _outputArray.length; i++) {
-			_displayOutput(i, delay);
+			_swapElements(listId, countId, i, outputDelay);
 		}
 	}
 
-
-	var _displayOutput = function (i, delay) {
+	var _swapElements = function (listId, countId, i, outputDelay) {
 		setTimeout(function () {
-			document.getElementById('array').innerHTML = _outputArray[i];
-		}, delay * i);
+			var list = document.getElementById(listId).childNodes, pair = _outputArray[i];
+			_exchangeElements(list.item(pair[0]), list.item(pair[1]));
+			// display the total swap count
+			document.getElementById(countId).innerHTML = ("Number of swaps: " + (i+1));
+		}, i * outputDelay);
 	}
 
+	function _exchangeElements(element1, element2) {
+		var clonedElement1 = element1.cloneNode(true);
+		var clonedElement2 = element2.cloneNode(true);
+		element2.parentNode.replaceChild(clonedElement1, element2);
+		element1.parentNode.replaceChild(clonedElement2, element1);
+		clonedElement1.classList.add('throb');
+		clonedElement2.classList.add('throb');
+	}
 
-	var _getArrayAsString = function (swap1, swap2) {
-		var i, str = "", separator = ""; // separator is initially blank
+	var _showArray = function (listId, countId) {
+		var i, li, list = document.getElementById(listId);
+		// clear the list
+		list.innerHTML = "";
 
 		for (i=0; i<_numberArray.length; i++) {
-			str += separator;
-			if (i === swap1 || i === swap2) {
-				// highlight the elements that are being swapped
-				str += "<span style=\"background-color: #FF0000\">";
-				str += _numberArray[i];
-				str += "</span>"
-			} else {
-				str += _numberArray[i];
-			}
-			separator = ", "; // change separator to a comma+space after first iteration
+			li = document.createElement('li');
+			li.style.width = ((_numberArray.length-1).toString().length) + "em";
+			li.innerHTML = _numberArray[i];
+			list.appendChild(li);
 		}
 
-		return str;
-	}
-
-	var _showArray = function () {
-		// show the new array to the user
-		document.getElementById('array').innerHTML = _getArrayAsString(undefined, undefined);
-
-		// clear the count
-		document.getElementById('swapcount').innerHTML = "";
+		// clear the count in the UI
+		document.getElementById(countId).innerHTML = ("Number of swaps: 0");
 	}
 
 	//
 	// public methods
 	//
 
-	var createRandomArray = function (size) {
-		var i;
-		_numberArray = []; // clear the array
-		// fill it with random values
-		for (i=0; i<size; i++) {
-			_numberArray[i] = Math.floor(Math.random() * size);
-		}
+	var generateArray = function (listId, countId, size, type) {
+		var i, sequentialArray = [];
 
-		_showArray();
-	};
+		// clear the array
+		_numberArray = [];
 
-	var createRandomUniqueArray = function (size) {
-		var i, n, count = 0, sequentialArray = [];
-		_numberArray = []; // clear the array
-
-		// generate an array of sequential values to pull from
+		// generate a local array of sequential values to pull from for case 2
 		for (i=0; i<size; i++) {
 			sequentialArray[i] = i;
 		}
 
-		while (count < size) {
-			n = Math.floor(Math.random() * size);
-			if (sequentialArray[n] !== undefined) {
-				_numberArray[count] = sequentialArray[n];
-				sequentialArray[n] = undefined;
-				count++;
+		i = 0;
+		while (i < size) {
+			switch (+type) {
+
+				// random
+				case 1:
+					_numberArray[i] = Math.floor(Math.random() * size);
+					i++;
+				break;
+
+				// random no duplicates
+				case 2:
+					n = Math.floor(Math.random() * size);
+					if (sequentialArray[n] !== undefined) {
+						_numberArray[i] = sequentialArray[n];
+						sequentialArray[n] = undefined;
+						i++;
+					}
+				break;
+
+				// sorted ascending
+				case 3:
+					_numberArray[i] = i;
+					i++;
+				break;
+
+				// sorted descending
+				case 4:
+					_numberArray[i] = size-1-i;
+					i++;
+				break;
+
+				// single value
+				case 5:
+					_numberArray[i] = 0;
+					i++;
+				break;
+
+				default:
+					// should never get here
+					i++;
+				break;
 			}
 		}
 
-		_showArray();
-	}
+		// create the list of elements in the UI
+		_showArray(listId, countId);
+	};
 
-	var createSortedArrayAsc = function (size) {
-		var i;
-		_numberArray = []; // clear the array
-		// fill it with sequential values
-		for (i=0; i<size; i++) {
-			_numberArray[i] = i;
-		}
-
-		_showArray();
-	}
-
-	var createSortedArrayDesc = function (size) {
-		var i;
-		_numberArray = []; // clear the array
-		// fill it with random values
-		for (i=0; i<size; i++) {
-			_numberArray[i] = size-1-i;
-		}
-
-		_showArray();
-	}
-
-	var createEqualArray = function (size) {
-		var i;
-		_numberArray = []; // clear the array
-		// fill it with random values
-		for (i=0; i<size; i++) {
-			_numberArray[i] = 0;
-		}
-
-		_showArray();
-	}
-
-	var sortArray = function () {
+	var sortArray = function (listId, countId, outputDelay) {
 		_outputArray = []; // clear the output array
-		_swapcount = 0; // reset the swap count
 
-		// clear the count
-		document.getElementById('swapcount').innerHTML = "";
+		// clear the swap count in the UI
+		document.getElementById('swapcount').innerHTML = ("Number of swaps: 0");
 
 		// sort the array
 		_quicksort(_numberArray, 0, _numberArray.length-1);
 
-		// store the final array state
-		_outputArray.push(_getArrayAsString(undefined, undefined));
-
-		// display the total swap count
-		document.getElementById('swapcount').innerHTML += ("Number of swaps: " + _swapcount + "<br>");
-
-		_playBackOutput();
+		// use the list of swap pairs during the sort to manipulate the UI
+		_playBackOutput(listId, countId, outputDelay);
 	}
 
 	return {
-		createRandomArray: createRandomArray,
-		createRandomUniqueArray: createRandomUniqueArray,
-		createSortedArrayAsc: createSortedArrayAsc,
-		createSortedArrayDesc: createSortedArrayDesc,
-		createEqualArray: createEqualArray,
+		generateArray: generateArray,
 		sortArray: sortArray
 	};
 

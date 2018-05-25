@@ -1,0 +1,28 @@
+ul {
+  padding: 0;
+  line-height: 1px;
+}
+li {
+    border: 1px solid #000;
+    display: inline-block;
+    margin: 1px;
+    text-align: center;
+    font-size: xx-small;
+    line-height: 1;
+}
+
+.throb {
+    /* 30ms is the lowest duration that works */
+    animation: throb 30ms ease-out 0s 1;
+}
+
+@keyframes throb {
+    0%, 100% {
+        color: black;
+        background-color: white;
+    }
+    50% {
+        color: white;
+        background-color: red;
+    }
+}

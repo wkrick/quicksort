@@ -1,21 +1,43 @@
-<html>
-	<title>quicksort</title>
-	<head>
-		<meta charset="UTF-8">
-		<script src="quicksort.js"></script>
-	</head>
-	<body>
-		<p>
-			Elements: <input id="num" type="number" name="quantity" min="1" max="1000" value="1000">
-			<button onclick="Quicksort.createRandomArray(document.getElementById('num').value)">New Random Array</button>
-			<button onclick="Quicksort.createRandomUniqueArray(document.getElementById('num').value)">New Random Array (no duplicates)</button>
-			<button onclick="Quicksort.createSortedArrayAsc(document.getElementById('num').value)">New Sorted Array (ascending)</button>
-			<button onclick="Quicksort.createSortedArrayDesc(document.getElementById('num').value)">New Sorted Array (descending)</button>
-			<button onclick="Quicksort.createEqualArray(document.getElementById('num').value)">New Equal Array (zeroes)</button>
-			<br><br>
-			<button onclick="Quicksort.sortArray()">Quicksort</button>
-		</p>
-		<div id="array"></div>
-		<p id="swapcount"></p>
-	</body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Quicksort</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+
+	<!-- my CSS-->
+	<link href="quicksort.css" rel="stylesheet">
+  </head>
+  <body>
+	<div class="container-fluid">
+		<button onclick="Quicksort.generateArray('array', 'swapcount', document.getElementById('num').value, document.getElementById('type').value)">Generate</button>
+		Items: <input id="num" type="number" min="0" max="1000" value="500">
+		<select id="type">
+			<option value="1">Random</option>
+			<option value="2">Random (no duplicates)</option>
+			<option value="3">Sorted (ascending)</option>
+			<option value="4">Sorted (descending)</option>
+			<option value="5">Single Value (zeroes)</option>
+		</select>
+		<br><br>
+		<button onclick="Quicksort.sortArray('array', 'swapcount', document.getElementById('delay').value)">Quicksort</button>
+		Delay: <input id="delay" type="number" min="0" max="100" value="10">
+		<span id="swapcount"></span>
+		<br><br>
+		<ul id="array" data-swapcount="0"></ul>
+	</div>
+
+		<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+	<!-- my JavaScript -->
+	<script src="quicksort.js"></script>
+  </body>
 </html>
