@@ -1,7 +1,10 @@
 var Quicksort = (function () {
 
 	var _numberArray = [],
-		_outputArray = [];
+		_outputArray = [],
+		_listId,
+		_countId,
+		_outputDelay = 0;
 
 	// Quiksort algorithm using the Hoare partition scheme
 	// Reference: https://en.wikipedia.org/wiki/Quicksort#Hoare_partition_scheme
@@ -43,52 +46,7 @@ var Quicksort = (function () {
 		}
 	}
 
-	var _playBackOutput = function (listId, countId, outputDelay) {
-		var i;
-		for (i = 0; i < _outputArray.length; i++) {
-			_swapElements(listId, countId, i, outputDelay);
-		}
-	}
-
-	var _swapElements = function (listId, countId, i, outputDelay) {
-		setTimeout(function () {
-			var list = document.getElementById(listId).childNodes, pair = _outputArray[i];
-			_exchangeElements(list.item(pair[0]), list.item(pair[1]));
-			// display the total swap count
-			document.getElementById(countId).innerHTML = ("Number of swaps: " + (i+1));
-		}, i * outputDelay);
-	}
-
-	function _exchangeElements(element1, element2) {
-		var clonedElement1 = element1.cloneNode(true);
-		var clonedElement2 = element2.cloneNode(true);
-		element2.parentNode.replaceChild(clonedElement1, element2);
-		element1.parentNode.replaceChild(clonedElement2, element1);
-		clonedElement1.classList.add('throb');
-		clonedElement2.classList.add('throb');
-	}
-
-	var _showArray = function (listId, countId) {
-		var i, li, list = document.getElementById(listId);
-		// clear the list
-		list.innerHTML = "";
-
-		for (i=0; i<_numberArray.length; i++) {
-			li = document.createElement('li');
-			li.style.width = ((_numberArray.length-1).toString().length) + "em";
-			li.innerHTML = _numberArray[i];
-			list.appendChild(li);
-		}
-
-		// clear the count in the UI
-		document.getElementById(countId).innerHTML = ("Number of swaps: 0");
-	}
-
-	//
-	// public methods
-	//
-
-	var generateArray = function (listId, countId, size, type) {
+	var _generateArray = function (size, type) {
 		var i, sequentialArray = [];
 
 		// clear the array
@@ -143,27 +101,107 @@ var Quicksort = (function () {
 				break;
 			}
 		}
-
-		// create the list of elements in the UI
-		_showArray(listId, countId);
 	};
 
-	var sortArray = function (listId, countId, outputDelay) {
-		_outputArray = []; // clear the output array
+	var _showSorting = function () {
+		var i;
+		for (i = 0; i < _outputArray.length; i++) {
+			_swapElements(i);
+		}
+	}
+
+	var _swapElements = function (i) {
+		setTimeout(function () {
+			var list = document.getElementById(_listId).childNodes, pair = _outputArray[i];
+			_exchangeElements(list.item(pair[0]), list.item(pair[1]));
+			// update the swap count in the UI
+			document.getElementById(_countId).innerHTML = ("Number of swaps: " + (i+1));
+		}, i * _outputDelay);
+	}
+
+	var _exchangeElements = function (element1, element2) {
+		var clonedElement1 = element1.cloneNode(true);
+		var clonedElement2 = element2.cloneNode(true);
+		clonedElement1.style.animationDuration = (30 + _outputDelay*10) + "ms";
+		clonedElement2.style.animationDuration = (30 + _outputDelay*10) + "ms";
+		element2.parentNode.replaceChild(clonedElement1, element2);
+		element1.parentNode.replaceChild(clonedElement2, element1);
+	}
+
+	var _showArray = function () {
+		var i, li, list = document.getElementById(_listId);
+		// clear the list
+		list.innerHTML = "";
+
+		for (i=0; i<_numberArray.length; i++) {
+			_addElement(list, i);
+		}
+
+		// clear the count in the UI
+		document.getElementById(_countId).innerHTML = ("Number of swaps: 0");
+	}
+
+	var _addElement = function (list, i) {
+		setTimeout(function () {
+			var li = document.createElement('li');
+			li.classList.add('throb');
+			li.style.animationDuration = "30ms";
+			li.style.width = ((_numberArray.length-1).toString().length) + "em";
+			li.innerHTML = _numberArray[i];
+			list.appendChild(li);
+		}, i * 5);
+	}
+
+
+	//
+	// public methods
+	//
+
+	var generateArray = function (listId, countId, size, type) {
+		_listId = listId;
+		_countId = countId;
+
+		_generateArray(size, type);
+
+		// create the list of elements in the UI
+		_showArray();
+	};
+
+	var sortArray = function (outputDelay) {
+		if (! _numberArray.length > 0) {
+			return;
+		}
+		_outputDelay = outputDelay;
+
+		 // clear the output array
+		_outputArray = [];
 
 		// clear the swap count in the UI
-		document.getElementById('swapcount').innerHTML = ("Number of swaps: 0");
+		document.getElementById(_countId).innerHTML = ("Number of swaps: 0");
 
 		// sort the array
 		_quicksort(_numberArray, 0, _numberArray.length-1);
 
 		// use the list of swap pairs during the sort to manipulate the UI
-		_playBackOutput(listId, countId, outputDelay);
+		_showSorting();
+	}
+
+	var test = function () {
+		var i, loops = 1000, size = 10000, totalSwaps = 0;
+		for (i = 0; i<loops; i++) {
+			_generateArray(size, 2);
+			_outputArray = [];
+			_quicksort(_numberArray, 0, _numberArray.length-1);
+			totalSwaps += _outputArray.length;
+		}
+		console.log("totalSwaps: " + totalSwaps + "   loops:" + loops)
+		document.getElementById('swapcount').innerHTML = ("Average Number of swaps: " + (totalSwaps/loops));
 	}
 
 	return {
 		generateArray: generateArray,
-		sortArray: sortArray
+		sortArray: sortArray,
+		test: test
 	};
 
 })();

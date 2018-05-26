@@ -15,7 +15,7 @@
   <body>
 	<div class="container-fluid">
 		<button onclick="Quicksort.generateArray('array', 'swapcount', document.getElementById('num').value, document.getElementById('type').value)">Generate</button>
-		Items: <input id="num" type="number" min="0" max="1000" value="500">
+		Items: <input id="num" type="number" min="0" max="1000" value="200">
 		<select id="type">
 			<option value="1">Random</option>
 			<option value="2">Random (no duplicates)</option>
@@ -24,11 +24,11 @@
 			<option value="5">Single Value (zeroes)</option>
 		</select>
 		<br><br>
-		<button onclick="Quicksort.sortArray('array', 'swapcount', document.getElementById('delay').value)">Quicksort</button>
-		Delay: <input id="delay" type="number" min="0" max="100" value="10">
+		<button onclick="Quicksort.sortArray(document.getElementById('delay').value)">Quicksort</button>
+		Delay: <input id="delay" type="number" min="0" max="100" value="100">
 		<span id="swapcount"></span>
 		<br><br>
-		<ul id="array" data-swapcount="0"></ul>
+		<ul id="array"></ul>
 	</div>
 
 		<!-- Optional JavaScript -->
